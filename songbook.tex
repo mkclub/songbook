@@ -2,6 +2,7 @@
 \KOMAoptions{DIV=calc}
 %\usepackage[lmargin=1.5cm,rmargin=2cm,tmargin=2cm,bmargin=2.5cm]{geometry}
 \usepackage{fontspec}
+\usepackage{import}
 \setmainfont{Liberation Sans}
 \setsansfont{Liberation Sans}
 \usepackage{polyglossia}
@@ -13,7 +14,7 @@
 \maketitle
 \chapter{Патріотичні}
 \include{Тінь_Сонця/Козача_могила}
-\include{Піккардійська_терція/Плине_кача}
+\subimport{Піккардійська_терція/}{Плине_кача.tex}
 \include{Мандри/Не_спи_моя_рідна_земля}
 \include{Тартак/Лицарський_хрест}
 \include{Народні/Чорна_гора}
