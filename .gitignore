@@ -3,3 +3,7 @@
 *.pdf
 *.toc
 *.gz
+*/70
+*-map-*.ly
+*-names-*.ly
+*.dep
