@@ -80,6 +80,6 @@
 Ще не придумали :) 
 
 ## Команда
-- Jolly Roger (@jollyroger) - аккорди
+- @jollyroger - аккорди
 - @horothewise - збір матеріалів
-- Gray (ashenwolf) - верстка TeX, додрукова підготовка
+- @ashenwolf - верстка TeX, додрукова підготовка
