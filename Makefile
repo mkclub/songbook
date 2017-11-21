@@ -4,7 +4,12 @@ songbook.pdf: songbook.tex */*.tex Піккардійська_терція/Пл�
 	xelatex -interaction batch $<
 
 Піккардійська_терція/Плине_кача.tex: Піккардійська_терція/Плине_кача.lytex
-	lilypond-book \
+	cd `dirname $<` && lilypond-book \
 		--latex-program=xelatex \
-		-f latex \
-		--out `dirname $<` $<
+		-f latex `basename $<`
+
+Піккардійська_терція/Плине_кача.tex: Піккардійська_терція/Плине_кача.ly
+
+all: songbook.pdf
+
+.PHONY: all
