@@ -1,53 +1,42 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 INCLUDE(CMakeModules/UseLATEX.cmake)
+INCLUDE(CMakeModules/BuildByCopy.cmake)
 
 SET(LATEX_COMPILER xelatex)
 SET(PDFLATEX_COMPILER xelatex)
 
-SET(CHILD_DOCUMENTS
-    "Mad_Heads/Надія_є.tex"
-    "Барнич/Гуцулка_Ксеня.tex"
-    "ВВ/Відпустка.tex"
-    "Володимир_Івасюк/Червона_рута.tex"
-    "Вій/Колискова.tex"
-    "Костянтин_Огнєвий/Зорі_як_очі.tex"
-    "Луценко_Шамо/Як_тебе_не_любити_Києве_мій.tex"
-    "Ляпис_Трубецкой/Воины_света.tex"
-    "Ляпис_Трубецкой/Грай.tex"
-    "Ляпис_Трубецкой/Не_быць_скотом.tex"
-    "Мандри/Дорога.tex"
-    "Мандри/Не_спи_моя_рідна_земля.tex"
-    "Мандри/Орися.tex"
-    "Народні/Червоненький_бурячок.tex"
-    "Народні/Чорна_гора.tex"
-    "Обійми_дощу/Земле_моя_мила.tex"
-    "Олексій_Бик/Маленький_чорний_котик.tex"
-    "Стары_Ольса/У_карчме.tex"
-    "Тартак/Лицарський_хрест.tex"
-    "Тінь_Сонця/Козача_могила.tex"
-)
-
 #TODO: Make dependencies transparent, avoid globbing
+FILE(GLOB_RECURSE CHILD_DOCUMENTS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.tex")
 FILE(GLOB_RECURSE LILYPOND_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.ly")
+build_by_copy(${LILYPOND_FILES})
+
 FILE(GLOB_RECURSE LYTEX_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.lytex")
+build_by_copy(${LYTEX_FILES})
 
 SET(LILYPOND_TEX_FILES)
 FOREACH(LYTEX_FILE ${LYTEX_FILES})
     STRING(REPLACE ".lytex" ".tex" LILYPOND_TEX_FILE ${LYTEX_FILE})
+    STRING(REPLACE ".lytex" ".ly" LILYPOND_FILE ${LYTEX_FILE})
     LIST(APPEND LILYPOND_TEX_FILES ${LILYPOND_TEX_FILE})
+    GET_FILENAME_COMPONENT(LYTEX_FILE_NAME ${LYTEX_FILE} NAME)
     GET_FILENAME_COMPONENT(LILYPOND_TEX_OUT_DIR ${LILYPOND_TEX_FILE} DIRECTORY)
-    #TODO: add relevant lilypond files as dependencies based on filename
+    GET_FILENAME_COMPONENT(LILYPOND_TEX_OUT_DIR ${LILYPOND_TEX_OUT_DIR} NAME)
     ADD_CUSTOM_COMMAND(
-        OUTPUT ${LILYPOND_TEX_FILE}
-        COMMAND lilypond-book --latex-program=xelatex -f latex --out ${LILYPOND_TEX_OUT_DIR} ${LYTEX_FILE}
-        DEPENDS ${LYTEX_FILE} 
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${LILYPOND_TEX_FILE}
+        COMMAND lilypond-book --latex-program=xelatex -f latex
+            --out ${CMAKE_CURRENT_BINARY_DIR}/${LILYPOND_TEX_OUT_DIR}
+            ${CMAKE_CURRENT_BINARY_DIR}/${LYTEX_FILE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${LILYPOND_TEX_OUT_DIR}
+        DEPENDS
+            ${CMAKE_CURRENT_BINARY_DIR}/${LYTEX_FILE}
+            ${CMAKE_CURRENT_BINARY_DIR}/${LILYPOND_FILE}
     )
 ENDFOREACH()
 
 message("LILYPOND_TEX_FILES: " ${LILYPOND_TEX_FILES})
 
 ADD_LATEX_DOCUMENT(songbook.tex 
-    INPUTS ${CHILD_DOCUMENTS} ${LILYPOND_FILES} ${LYTEX_FILES}
+    INPUTS ${CHILD_DOCUMENTS}
     DEPENDS ${LILYPOND_TEX_FILES}
     DEFAULT_PDF)

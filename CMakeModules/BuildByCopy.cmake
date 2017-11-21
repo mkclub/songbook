@@ -1,0 +1,12 @@
+FUNCTION(build_by_copy SOURCES)
+    FOREACH(_FILE ${SOURCES})
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_FILE}
+            COMMAND ${CMAKE_COMMAND} -E copy 
+                ${CMAKE_CURRENT_SOURCE_DIR}/${_FILE} 
+                ${CMAKE_CURRENT_BINARY_DIR}/${_FILE}
+                DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/${_FILE}
+        )
+        set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_FILE} PROPERTIES GENERATED TRUE)
+    ENDFOREACH()
+ENDFUNCTION()
