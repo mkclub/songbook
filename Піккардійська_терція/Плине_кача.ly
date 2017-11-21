@@ -12,8 +12,8 @@
             \voiceOne
             d2.\pp~
             d2.~
-            d2.~
-            c2.~
+            d2.
+            c2.
             d2.
 
             d8\( e f4 e8 f
@@ -27,8 +27,8 @@
             \voiceTwo
             d2.~
             d2.~
-            d2.~
-            c2.~
+            d2.
+            c2.
             d2.
 
             <b d>2.\(
